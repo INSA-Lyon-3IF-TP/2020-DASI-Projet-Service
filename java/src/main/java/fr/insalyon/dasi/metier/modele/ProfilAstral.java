@@ -13,10 +13,11 @@ import javax.persistence.Id;
 
 /**
  *
- * @author Nicolas
+ * @author Nicolas Trouin et Fabien Narboux
  */
 @Entity
 public class ProfilAstral implements Serializable {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,8 +26,7 @@ public class ProfilAstral implements Serializable {
     private String couleur;
     private String animal;
 
-    protected ProfilAstral() {
-    }
+    protected ProfilAstral() {}
 
     public ProfilAstral(String signeZodiaque, String signeChinois, String couleur, String animal) {
         this.signeZodiaque = signeZodiaque;
@@ -75,6 +75,5 @@ public class ProfilAstral implements Serializable {
     public String toString() {
         return "ProfilAstral{" + "id=" + id + ", signeZodiaque=" + signeZodiaque + ", signeChinois=" + signeChinois + ", couleur=" + couleur + ", animal=" + animal + '}';
     }
-    
     
 }

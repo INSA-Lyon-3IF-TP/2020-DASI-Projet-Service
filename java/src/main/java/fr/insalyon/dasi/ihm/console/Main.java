@@ -1,10 +1,16 @@
 package fr.insalyon.dasi.ihm.console;
 
 import fr.insalyon.dasi.dao.JpaUtil;
+import fr.insalyon.dasi.metier.modele.Astrologue;
+import fr.insalyon.dasi.metier.modele.Cartomancien;
 import fr.insalyon.dasi.metier.modele.Client;
+import fr.insalyon.dasi.metier.modele.Consultation;
 import fr.insalyon.dasi.metier.modele.Employe;
 import fr.insalyon.dasi.metier.modele.Genre;
+import fr.insalyon.dasi.metier.modele.Medium;
 import fr.insalyon.dasi.metier.modele.ProfilAstral;
+import fr.insalyon.dasi.metier.modele.Spirite;
+import fr.insalyon.dasi.metier.service.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,7 +22,7 @@ import javax.persistence.Persistence;
 
 /**
  *
- * @author DASI Team
+ * @author Nicolas Trouin et Fabien Narboux
  */
 public class Main {
 
@@ -35,6 +41,10 @@ public class Main {
         //saisirRechercheClient();
         
         initialiserEmployes();
+        
+        initialiserMediums();
+        
+        initialiserConsultation();
 
         JpaUtil.destroy();
     }
@@ -45,6 +55,14 @@ public class Main {
     
     public static void afficherEmploye(Employe employe) {
         System.out.println("-> " + employe);
+    }
+    
+    public static void afficherMedium(Medium medium) {
+        System.out.println("-> " + medium);
+    }
+    
+    public static void afficherConsultation(Consultation consultation) {
+        System.out.println("-> " + consultation);
     }
 
     public static void initialiserClients() {
@@ -157,6 +175,113 @@ public class Main {
         afficherEmploye(emp1);
         afficherEmploye(emp2);
         afficherEmploye(emp3);
+        System.out.println();
+    }
+    
+    public static void initialiserMediums() {
+        
+        System.out.println();
+        System.out.println("**** initialiserMediums() ****");
+        System.out.println();
+        
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("DASI-PU");
+        EntityManager em = emf.createEntityManager();
+
+        Medium med1 = new Cartomancien("Mme Irma",Genre.Feminin,"Comprenez votre entourage grâce à mes cartes ! Résultats rapides.");
+        Medium med2 = new Spirite("Gwenaëlle",Genre.Feminin,"Spécialiste des grandes conversations au-delà de TOUTES les frontières.", "Boule de crital");
+        Medium med3 = new Astrologue("Serena",Genre.Feminin,"Basée à Champigny-sur-Marne, Serena vous révèlera votre avenir pour éclairer votre passé.","École Normale Supérieure d’Astrologie (ENS-Astro)",2006);
+
+        
+        System.out.println();
+        System.out.println("** Mediums avant persistance: ");
+        afficherMedium(med1);
+        afficherMedium(med2);
+        afficherMedium(med3);
+        System.out.println();
+
+        try {
+            em.getTransaction().begin();
+            em.persist(med1);
+            em.persist(med2);
+            em.persist(med3);
+            em.getTransaction().commit();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service", ex);
+            try {
+                em.getTransaction().rollback();
+            }
+            catch (IllegalStateException ex2) {
+                // Ignorer cette exception...
+            }
+        } finally {
+            em.close();
+        }
+
+        System.out.println();
+        System.out.println("** Mediums après persistance: ");
+        afficherMedium(med1);
+        afficherMedium(med2);
+        afficherMedium(med3);
+        System.out.println();
+    }
+    
+    public static void initialiserConsultation() {
+        
+        System.out.println();
+        System.out.println("**** initialiserConsultation() ****");
+        System.out.println();
+        
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("DASI-PU");
+        EntityManager em = emf.createEntityManager();
+        
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        String dateC = "2020-04-03";
+        Date date_C = null;
+
+        try {
+            date_C = simpleDateFormat.parse(dateC);
+        }
+        catch (ParseException ex) {
+            // Erreur
+        }
+
+        Service service = new Service();
+        Client client = service.rechercherClientParId((long)1);
+        Employe employe = service.rechercherEmployeParId((long)1);
+        Medium medium = service.rechercherMediumParId((long)1);
+
+        Consultation c1 = new Consultation(date_C,client,employe,medium);
+        // WARNING : Ajouter la consultation à la liste des consultations client, employe, et medium !!!!!!
+        
+        
+        System.out.println();
+        System.out.println("** Consultation avant persistance: ");
+        afficherConsultation(c1);
+        System.out.println();
+
+        try {
+            em.getTransaction().begin();
+            em.persist(c1);
+            em.merge(medium);
+            em.merge(employe);
+            em.merge(client);
+            em.getTransaction().commit();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service", ex);
+            try {
+                em.getTransaction().rollback();
+            }
+            catch (IllegalStateException ex2) {
+                // Ignorer cette exception...
+            }
+        } finally {
+            em.close();
+        }
+
+        System.out.println();
+        System.out.println("** Consultation après persistance: ");
+        afficherConsultation(c1);
         System.out.println();
     }
 

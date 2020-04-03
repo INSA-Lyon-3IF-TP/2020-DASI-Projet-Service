@@ -13,31 +13,19 @@ import javax.persistence.Entity;
  * @author Nicolas Trouin et Fabien Narboux
  */
 @Entity
-public class Spirite extends Medium implements Serializable{
-    
-    private String support;
+public class Cartomancien extends Medium implements Serializable {
 
-    protected Spirite() {
-    }
+    protected Cartomancien() {}
 
-    public Spirite(String denomination, Genre genre, String presentation, String support) {
+    public Cartomancien(String denomination, Genre genre, String presentation) {
         this.denomination = denomination;
         this.genre = genre;
         this.presentation = presentation;
-        this.support = support;
-    }
-
-    public String getSupport() {
-        return support;
-    }
-
-    public void setSupport(String support) {
-        this.support = support;
     }
 
     @Override
     public String toString() {
-        return "Spirite{" + super.toString() + ", support=" + support + '}';
+        return "Cartomancien{" + super.toString() + '}';
     }
     
 }

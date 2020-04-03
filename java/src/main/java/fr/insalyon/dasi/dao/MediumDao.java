@@ -5,21 +5,21 @@
  */
 package fr.insalyon.dasi.dao;
 
-import fr.insalyon.dasi.metier.modele.Employe;
+import fr.insalyon.dasi.metier.modele.Medium;
 import javax.persistence.EntityManager;
 
 /**
  *
  * @author Nicolas Trouin et Fabien Narboux
  */
-public class EmployeDao {
-    public void creer(Employe employe) {
+public class MediumDao {
+    public void creer(Medium medium) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
-        em.persist(employe);
+        em.persist(medium);
     }
     
-    public Employe chercherParId(Long employeId) {
+    public Medium chercherParId(Long mediumId) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
-        return em.find(Employe.class, employeId); // renvoie null si l'identifiant n'existe pas
+        return em.find(Medium.class, mediumId); // renvoie null si l'identifiant n'existe pas
     }
 }

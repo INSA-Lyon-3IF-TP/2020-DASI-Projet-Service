@@ -7,7 +7,7 @@ package fr.insalyon.dasi.metier.modele;
 
 /**
  *
- * @author Nicolas
+ * @author Nicolas Trouin et Fabien Narboux
  */
 public enum Genre {
     Masculin,

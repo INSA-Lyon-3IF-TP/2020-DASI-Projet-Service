@@ -16,7 +16,7 @@ import javax.persistence.Temporal;
 
 /**
  *
- * @author DASI Team
+ * @author Nicolas Trouin et Fabien Narboux
  */
 @Entity
 public class Client implements Serializable {
@@ -34,10 +34,8 @@ public class Client implements Serializable {
     @Column(unique = true)
     private String mail;
     private String motDePasse;
-    
     @OneToOne(cascade=CascadeType.ALL)
     private ProfilAstral profilAstral;
-    
     @OneToMany(mappedBy="client")
     private List<Consultation> consultations;
 

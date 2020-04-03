@@ -45,8 +45,71 @@ public class Consultation implements Serializable {
     protected Consultation() {
     }
 
-    public Consultation(Date heureDemande) {
+    public Consultation(Date heureDemande, Client client, Employe employe, Medium medium) {
         this.heureDemande = heureDemande;
+        this.client = client;
+        this.employe = employe;
+        this.medium = medium;
+    }
+
+    public void setHeureDemande(Date heureDemande) {
+        this.heureDemande = heureDemande;
+    }
+
+    public void setHeureDebut(Date heureDebut) {
+        this.heureDebut = heureDebut;
+    }
+
+    public void setHeureFin(Date heureFin) {
+        this.heureFin = heureFin;
+    }
+
+    public void setCommentaire(String commentaire) {
+        this.commentaire = commentaire;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public void setEmploye(Employe employe) {
+        this.employe = employe;
+    }
+
+    public void setMedium(Medium medium) {
+        this.medium = medium;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Date getHeureDemande() {
+        return heureDemande;
+    }
+
+    public Date getHeureDebut() {
+        return heureDebut;
+    }
+
+    public Date getHeureFin() {
+        return heureFin;
+    }
+
+    public String getCommentaire() {
+        return commentaire;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public Employe getEmploye() {
+        return employe;
+    }
+
+    public Medium getMedium() {
+        return medium;
     }
 
     @Override

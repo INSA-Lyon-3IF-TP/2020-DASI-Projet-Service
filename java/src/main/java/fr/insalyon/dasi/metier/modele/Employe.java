@@ -16,7 +16,7 @@ import javax.persistence.OneToMany;
 
 /**
  *
- * @author Nicolas
+ * @author Nicolas Trouin et Fabien Narboux
  */
 @Entity
 public class Employe implements Serializable {

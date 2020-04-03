@@ -10,17 +10,20 @@ import javax.persistence.Entity;
 
 /**
  *
- * @author Nicolas
+ * @author Nicolas Trouin et Fabien Narboux
  */
 @Entity
 public class Astrologue extends Medium implements Serializable{
+    
     private String formation;
     private Integer promo;
 
-    public Astrologue() {
-    }
+    protected Astrologue() {}
 
-    public Astrologue(String formation, Integer promo) {
+    public Astrologue(String denomination, Genre genre, String presentation,String formation, Integer promo) {
+        this.denomination = denomination;
+        this.genre = genre;
+        this.presentation = presentation;
         this.formation = formation;
         this.promo = promo;
     }
@@ -39,6 +42,11 @@ public class Astrologue extends Medium implements Serializable{
 
     public void setPromo(Integer promo) {
         this.promo = promo;
+    }
+
+    @Override
+    public String toString() {
+        return "Astrologue{"+ super.toString() + ", formation=" + formation + ", promo=" + promo + '}';
     }
     
 }
