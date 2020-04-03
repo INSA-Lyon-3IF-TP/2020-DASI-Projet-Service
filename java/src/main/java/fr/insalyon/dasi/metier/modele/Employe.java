@@ -6,11 +6,13 @@
 package fr.insalyon.dasi.metier.modele;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -30,7 +32,10 @@ public class Employe implements Serializable {
     private String mail;
     private String motDePasse;
     private Boolean estOccupe = false;
-
+    
+    @OneToMany(mappedBy = "employe")
+    private List<Consultation> consultations;
+    
     protected Employe() {
     }
 
