@@ -5,7 +5,10 @@
  */
 package fr.insalyon.dasi.dao;
 
+import fr.insalyon.dasi.metier.modele.Client;
 import fr.insalyon.dasi.metier.modele.Consultation;
+import fr.insalyon.dasi.metier.modele.Employe;
+import fr.insalyon.dasi.metier.modele.Medium;
 import javax.persistence.EntityManager;
 
 /**
@@ -15,6 +18,18 @@ import javax.persistence.EntityManager;
 public class ConsultationDao {
     public void creer(Consultation consultation) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
+        Client client = consultation.getClient();
+        client.addConsultation(consultation);
+        em.merge(client);
+        
+        Employe employe = consultation.getEmploye();
+        employe.addConsultation(consultation);
+        em.merge(employe);
+        
+        Medium medium = consultation.getMedium();
+        medium.addConsultation(consultation);
+        em.merge(medium);
+        
         em.persist(consultation);
     }
     

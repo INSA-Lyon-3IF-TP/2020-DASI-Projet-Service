@@ -116,6 +116,14 @@ public class Employe implements Serializable {
     public void setEstOccupe(Boolean estOccupe) {
         this.estOccupe = estOccupe;
     }
+    
+    public List<Consultation> getConsultations() {
+        return consultations;
+    }
+
+    public void addConsultation(Consultation consultation) {
+        this.consultations.add(consultation);
+    }
 
     @Override
     public String toString() {

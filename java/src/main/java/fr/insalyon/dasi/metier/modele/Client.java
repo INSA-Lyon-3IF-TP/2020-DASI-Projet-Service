@@ -2,6 +2,7 @@ package fr.insalyon.dasi.metier.modele;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -127,6 +128,14 @@ public class Client implements Serializable {
 
     public void setProfilAstral(ProfilAstral profilAstral) {
         this.profilAstral = profilAstral;
+    }
+
+    public List<Consultation> getConsultations() {
+        return consultations;
+    }
+
+    public void addConsultation(Consultation consultation) {
+        this.consultations.add(consultation);
     }
   
     @Override

@@ -14,6 +14,7 @@ import fr.insalyon.dasi.metier.service.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -45,7 +46,13 @@ public class Main {
         initialiserMediums();
         
         initialiserConsultation();
-
+        
+        testerClientApresConsultation();
+        
+        listerMediums();
+        
+        testerAuthentificationEmploye();
+        
         JpaUtil.destroy();
     }
 
@@ -252,7 +259,6 @@ public class Main {
         Medium medium = service.rechercherMediumParId((long)1);
 
         Consultation c1 = new Consultation(date_C,client,employe,medium);
-        // WARNING : Ajouter la consultation à la liste des consultations client, employe, et medium !!!!!!
         
         
         System.out.println();
@@ -260,30 +266,64 @@ public class Main {
         afficherConsultation(c1);
         System.out.println();
 
-        try {
-            em.getTransaction().begin();
-            em.persist(c1);
-            em.merge(medium);
-            em.merge(employe);
-            em.merge(client);
-            em.getTransaction().commit();
-        } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service", ex);
-            try {
-                em.getTransaction().rollback();
-            }
-            catch (IllegalStateException ex2) {
-                // Ignorer cette exception...
-            }
-        } finally {
-            em.close();
-        }
+        service.insererConsultation(c1);
 
         System.out.println();
         System.out.println("** Consultation après persistance: ");
         afficherConsultation(c1);
+        System.out.println(client.getConsultations());
         System.out.println();
     }
+
+    private static void listerMediums() {
+        Service service = new Service();
+        List<Medium> mediums = service.listerMediums();
+        mediums.forEach((medium) -> {
+            System.out.println(medium);
+        });
+    }
+    
+    public static void testerAuthentificationEmploye() {
+        System.out.println();
+        System.out.println("**** testerAuthentificationEmploye() ****");
+        System.out.println();
+        
+        Service service = new Service();
+        Employe employe;
+        String mail;
+        String motDePasse;
+
+        mail = "david-alexander.abdiullina@laposte.net";
+        motDePasse = "employe2";
+        employe = service.authentifierEmploye(mail, motDePasse);
+        if (employe != null) {
+            System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+            afficherEmploye(employe);
+        } else {
+            System.out.println("Authentification échouée avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+        }
+
+        mail = "moez.woagner@laposte.net";
+        motDePasse = "employe3";
+        employe = service.authentifierEmploye(mail, motDePasse);
+        if (employe != null) {
+            System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+            afficherEmploye(employe);
+        } else {
+            System.out.println("Authentification échouée avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+        }
+
+        mail = "employe.fictif@insa-lyon.fr";
+        motDePasse = "********";
+        employe = service.authentifierEmploye(mail, motDePasse);
+        if (employe != null) {
+            System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+            afficherEmploye(employe);
+        } else {
+            System.out.println("Authentification échouée avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+        }
+    }
+
 
 //    public static void testerInscriptionClient() {
 //        
@@ -510,4 +550,13 @@ public class Main {
 //        System.out.println();
 //
 //    }
+
+    private static void testerClientApresConsultation() {
+        Service service = new Service();
+        Client client = service.rechercherClientParId((long)1);
+        afficherClient(client);
+        System.out.println(client.getConsultations());
+        System.out.println();
+        System.out.println();
+    }
 }
