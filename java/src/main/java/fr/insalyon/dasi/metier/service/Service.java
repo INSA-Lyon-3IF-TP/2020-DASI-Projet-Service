@@ -9,6 +9,8 @@ import fr.insalyon.dasi.metier.modele.Client;
 import fr.insalyon.dasi.metier.modele.Consultation;
 import fr.insalyon.dasi.metier.modele.Employe;
 import fr.insalyon.dasi.metier.modele.Medium;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -193,16 +195,21 @@ public class Service {
         return resultat;
     }
     
-    public Long insererConsultation(Consultation consultation) {
-        Long resultat = null;
+    public Consultation prendreRendezVous(Client client,Medium medium) {
+        Consultation resultat = null;
         JpaUtil.creerContextePersistance();
         try {
             JpaUtil.ouvrirTransaction();
-            consultationDao.creer(consultation);
-            JpaUtil.validerTransaction();
-            resultat = consultation.getId();
+            Employe employe = employeDao.chercherParGenreEtDisponible(medium.getGenre());
+            System.out.println(employe);
+            if(employe != null) {
+                resultat = new Consultation(new Date(),client,employe,medium);
+                consultationDao.creer(resultat);
+                JpaUtil.validerTransaction(); //revoir version employe si acces concurrent
+                //Envoyer le mail ici
+            }
         } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service insererConsultation(consultation)", ex);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service prendreRendezVous(Client client,Medium medium)", ex);
             JpaUtil.annulerTransaction();
             resultat = null;
         } finally {
@@ -223,5 +230,45 @@ public class Service {
             JpaUtil.fermerContextePersistance();
         }
         return resultat;
+    }
+    
+    public List<Employe> listerEmployes() {
+        List<Employe> resultat = null;
+        JpaUtil.creerContextePersistance();
+        try {
+            resultat = employeDao.listerEmployes();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service listerEmployes()", ex);
+            resultat = null;
+        } finally {
+            JpaUtil.fermerContextePersistance();
+        }
+        return resultat;
+    }
+    
+    public void commencerConsultation(Consultation consultation) {
+        Date heureDebut = new Date();
+        consultation.setHeureDebut(heureDebut);
+        JpaUtil.creerContextePersistance();
+        try {
+            consultationDao.modifier(consultation);
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service commencerConsultation(consultation)", ex);
+        } finally {
+            JpaUtil.fermerContextePersistance();
+        }
+    }
+    
+    public void arreterConsultation(Consultation consultation) {
+        Date heureFin = new Date();
+        consultation.setHeureFin(heureFin);
+        JpaUtil.creerContextePersistance();
+        try {
+            consultationDao.modifier(consultation);
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service arreterConsultation(consultation)", ex);
+        } finally {
+            JpaUtil.fermerContextePersistance();
+        }
     }
 }

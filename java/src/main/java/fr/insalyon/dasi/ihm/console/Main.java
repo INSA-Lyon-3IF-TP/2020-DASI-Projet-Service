@@ -45,13 +45,15 @@ public class Main {
         
         initialiserMediums();
         
-        initialiserConsultation();
+        testerPrendreRendezVous();
         
-        testerClientApresConsultation();
+        //testerClientApresConsultation();
         
-        listerMediums();
+        //listerMediums();
         
-        testerAuthentificationEmploye();
+        //testerAuthentificationEmploye();
+        
+        //listerEmployes();
         
         JpaUtil.destroy();
     }
@@ -232,47 +234,29 @@ public class Main {
         System.out.println();
     }
     
-    public static void initialiserConsultation() {
+    public static void testerPrendreRendezVous() {
         
         System.out.println();
-        System.out.println("**** initialiserConsultation() ****");
+        System.out.println("**** testPrendreRendezVous() ****");
         System.out.println();
         
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("DASI-PU");
-        EntityManager em = emf.createEntityManager();
-        
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-        String dateC = "2020-04-03";
-        Date date_C = null;
-
-        try {
-            date_C = simpleDateFormat.parse(dateC);
-        }
-        catch (ParseException ex) {
-            // Erreur
-        }
+        EntityManager em = emf.createEntityManager();      
 
         Service service = new Service();
         Client client = service.rechercherClientParId((long)1);
-        Employe employe = service.rechercherEmployeParId((long)1);
         Medium medium = service.rechercherMediumParId((long)1);
-
-        Consultation c1 = new Consultation(date_C,client,employe,medium);
         
-        
-        System.out.println();
-        System.out.println("** Consultation avant persistance: ");
-        afficherConsultation(c1);
-        System.out.println();
 
-        service.insererConsultation(c1);
-
-        System.out.println();
-        System.out.println("** Consultation après persistance: ");
-        afficherConsultation(c1);
-        System.out.println(client.getConsultations());
-        System.out.println();
+        Consultation consultation = service.prendreRendezVous(client,medium);
+        if(consultation != null) {
+            System.out.println();
+            System.out.println("** Consultation après prise de rendez-vous: ");
+            afficherConsultation(consultation);
+            System.out.println();
+        } else {
+            System.out.println("ERREUR");
+        }
     }
 
     private static void listerMediums() {
@@ -558,5 +542,13 @@ public class Main {
         System.out.println(client.getConsultations());
         System.out.println();
         System.out.println();
+    }
+
+    private static void listerEmployes() {
+        Service service = new Service();
+        List<Employe> employes = service.listerEmployes();
+        employes.forEach((employe) -> {
+            System.out.println(employe);
+        });
     }
 }

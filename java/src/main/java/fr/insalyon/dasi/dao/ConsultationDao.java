@@ -16,7 +16,7 @@ import javax.persistence.EntityManager;
  * @author Nicolas Trouin et Fabien Narboux
  */
 public class ConsultationDao {
-    public void creer(Consultation consultation) {
+    public void creer(Consultation consultation) { // A MODIFIER: séparer dans les DAO
         EntityManager em = JpaUtil.obtenirContextePersistance();
         Client client = consultation.getClient();
         client.addConsultation(consultation);
@@ -24,6 +24,7 @@ public class ConsultationDao {
         
         Employe employe = consultation.getEmploye();
         employe.addConsultation(consultation);
+        employe.setEstOccupe(Boolean.TRUE);
         em.merge(employe);
         
         Medium medium = consultation.getMedium();
@@ -36,5 +37,10 @@ public class ConsultationDao {
     public Consultation chercherParId(Long consultationId) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         return em.find(Consultation.class, consultationId); // renvoie null si l'identifiant n'existe pas
+    }
+
+    public void modifier(Consultation consultation) {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        em.merge(consultation);
     }
 }

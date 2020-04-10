@@ -6,6 +6,9 @@
 package fr.insalyon.dasi.dao;
 
 import fr.insalyon.dasi.metier.modele.Employe;
+import fr.insalyon.dasi.metier.modele.Genre;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -32,6 +35,28 @@ public class EmployeDao {
         List<Employe> employes = query.getResultList();
         Employe result = null;
         if (!employes.isEmpty()) {
+            result = employes.get(0); // premier de la liste
+        }
+        return result;
+    }
+
+    public List<Employe> listerEmployes() {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        TypedQuery<Employe> query = em.createQuery("SELECT e FROM Employe e ORDER BY e.nom ASC, e.prenom ASC", Employe.class);
+        return query.getResultList();
+    }
+    
+    
+
+    public Employe chercherParGenreEtDisponible(Genre mediumGenre) {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        TypedQuery<Employe> query = em.createQuery("SELECT e FROM Employe e WHERE e.genre = :genre and e.estOccupe = FALSE", Employe.class);
+        query.setParameter("genre", mediumGenre); // correspond au paramètre ":genre" dans la requête
+        List<Employe> employes = query.getResultList();
+        Employe result = null;
+        if (!employes.isEmpty()) {
+            Collections.sort(employes, (Employe employe1, Employe employe2) -> employe1.getConsultations().size() > employe2.getConsultations().size() ? -1 : (employe1.getConsultations().size() < employe2.getConsultations().size()) ? 1 : 0 // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+            );
             result = employes.get(0); // premier de la liste
         }
         return result;

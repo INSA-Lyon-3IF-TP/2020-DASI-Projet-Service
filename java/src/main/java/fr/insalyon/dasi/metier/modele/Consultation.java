@@ -16,7 +16,7 @@ import javax.persistence.Temporal;
 
 /**
  *
- * @author Nicolas
+ * @author Nicolas Trouin et Fabien Narboux
  */
 @Entity
 public class Consultation implements Serializable {
