@@ -27,6 +27,8 @@ public class Service {
     protected EmployeDao employeDao = new EmployeDao();
     protected MediumDao mediumDao = new MediumDao();
     protected ConsultationDao consultationDao = new ConsultationDao();
+    
+    //Gestion des clients
 
     public Long inscrireClient(Client client) {
         Long resultat = null;
@@ -96,6 +98,10 @@ public class Service {
         return resultat;
     }
 
+    
+    // Gestion des employes
+    
+    
     public Long inscrireEmploye(Employe employe) {
         Long resultat = null;
         JpaUtil.creerContextePersistance();
@@ -150,6 +156,24 @@ public class Service {
         return resultat;
     }
     
+    public List<Employe> listerEmployes() {
+        List<Employe> resultat = null;
+        JpaUtil.creerContextePersistance();
+        try {
+            resultat = employeDao.listerEmployes();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service listerEmployes()", ex);
+            resultat = null;
+        } finally {
+            JpaUtil.fermerContextePersistance();
+        }
+        return resultat;
+    }
+    
+    
+    // Gestion des mediums
+    
+    
     public Long inscrireMedium(Medium medium) {
         Long resultat = null;
         JpaUtil.creerContextePersistance();
@@ -197,6 +221,10 @@ public class Service {
         return resultat;
     }
     
+    
+    // Gestion des consultations
+    
+    
     public Consultation prendreRendezVous(Client client,Medium medium) {
         Consultation resultat = null;
         JpaUtil.creerContextePersistance();
@@ -206,6 +234,14 @@ public class Service {
             System.out.println(employe);
             if(employe != null) {
                 resultat = new Consultation(new Date(),client,employe,medium);
+                client.addConsultation(resultat);
+                clientDao.modifier(client); //Modification du client
+                employe.addConsultation(resultat);
+                employe.setEstOccupe(Boolean.TRUE);
+                employeDao.modifier(employe); //Modification de l'employe
+                medium = resultat.getMedium();
+                medium.addConsultation(resultat);
+                mediumDao.modifier(medium); //Modification du medium
                 consultationDao.creer(resultat);
                 JpaUtil.validerTransaction(); //revoir version employe si acces concurrent
                 //Envoyer le mail ici
@@ -227,20 +263,6 @@ public class Service {
             resultat = consultationDao.chercherParId(id);
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service rechercherConsultationParId(id)", ex);
-            resultat = null;
-        } finally {
-            JpaUtil.fermerContextePersistance();
-        }
-        return resultat;
-    }
-    
-    public List<Employe> listerEmployes() {
-        List<Employe> resultat = null;
-        JpaUtil.creerContextePersistance();
-        try {
-            resultat = employeDao.listerEmployes();
-        } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service listerEmployes()", ex);
             resultat = null;
         } finally {
             JpaUtil.fermerContextePersistance();

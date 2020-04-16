@@ -39,5 +39,13 @@ public class ClientDao {
         return query.getResultList();
     }
     
-    // modifier / supprimer  ... 
+    public void modifier(Client client) {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        em.merge(client);
+    }
+    
+    public void supprimer(Client client) {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        em.remove(client);
+    }
 }

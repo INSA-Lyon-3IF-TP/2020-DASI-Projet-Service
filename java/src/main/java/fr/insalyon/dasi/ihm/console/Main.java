@@ -30,43 +30,44 @@ import util.AstroTest;
 public class Main {
 
     public static void main(String[] args) {
-
-        // TODO : Pensez à créer une unité de persistance "DASI-PU" et à vérifier son nom dans la classe JpaUtil
-        // Contrôlez l'affichage du log de JpaUtil grâce à la méthode log de la classe JpaUtil
         JpaUtil.init();
+        
+            //Tests client
 
-        initialiserClients();            // Question 3
-        //testerInscriptionClient();       // Question 4 & 5
-        //testerRechercheClient();         // Question 6
-        //testerListeClients();            // Question 7
-        //testerAuthentificationClient();  // Question 8
-        //saisirInscriptionClient();       // Question 9
+        initialiserClients();            
+        //testerInscriptionClient();       
+        //testerRechercheClient();         
+        //testerListeClients();            
+        //testerAuthentificationClient();
+        //saisirInscriptionClient();     
         //saisirRechercheClient();
         
+            //Tests employe
+        
         initialiserEmployes();
-        
-        initialiserMediums();
-        
-        testerPrendreRendezVous();
-        
-        testerDebuterConsultation();
-        
-        testerTerminerConsultation();
-        
-        testerPrendreRendezVous();
-        
-        //testerClientApresConsultation();
-        
-        //listerMediums();
-        
         //testerAuthentificationEmploye();
-        
         //listerEmployes();
         
-        testerAstroNetApi();
+            //Tests mediums
+        
+        initialiserMediums();
+        //listerMediums();
+        
+            //Tests consultation
+        
+        testerPrendreRendezVous();
+        //testerDebuterConsultation();
+        //testerTerminerConsultation();        
+        //testerClientApresConsultation();
+       
+            //Tests AstroNetApi
+
+        //testerAstroNetApi();
         
         JpaUtil.destroy();
     }
+    
+    //Affichage
 
     public static void afficherClient(Client client) {
         System.out.println("-> " + client);
@@ -83,6 +84,8 @@ public class Main {
     public static void afficherConsultation(Consultation consultation) {
         System.out.println("-> " + consultation);
     }
+    
+    //Clients
 
     public static void initialiserClients() {
         
@@ -150,6 +153,8 @@ public class Main {
         System.out.println();
     }
     
+    //Employe
+    
     public static void initialiserEmployes() {
         
         System.out.println();
@@ -196,6 +201,49 @@ public class Main {
         afficherEmploye(emp3);
         System.out.println();
     }
+    
+    public static void testerAuthentificationEmploye() {
+        System.out.println();
+        System.out.println("**** testerAuthentificationEmploye() ****");
+        System.out.println();
+        
+        Service service = new Service();
+        Employe employe;
+        String mail;
+        String motDePasse;
+
+        mail = "david-alexander.abdiullina@laposte.net";
+        motDePasse = "employe2";
+        employe = service.authentifierEmploye(mail, motDePasse);
+        if (employe != null) {
+            System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+            afficherEmploye(employe);
+        } else {
+            System.out.println("Authentification échouée avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+        }
+
+        mail = "moez.woagner@laposte.net";
+        motDePasse = "employe3";
+        employe = service.authentifierEmploye(mail, motDePasse);
+        if (employe != null) {
+            System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+            afficherEmploye(employe);
+        } else {
+            System.out.println("Authentification échouée avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+        }
+
+        mail = "employe.fictif@insa-lyon.fr";
+        motDePasse = "********";
+        employe = service.authentifierEmploye(mail, motDePasse);
+        if (employe != null) {
+            System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+            afficherEmploye(employe);
+        } else {
+            System.out.println("Authentification échouée avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+        }
+    }
+    
+    //Medium
     
     public static void initialiserMediums() {
         
@@ -248,14 +296,13 @@ public class Main {
         System.out.println();
     }
     
+    //Consultation
+    
     public static void testerPrendreRendezVous() {
         
         System.out.println();
         System.out.println("**** testerPrendreRendezVous() ****");
-        System.out.println();
-        
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("DASI-PU");
-        EntityManager em = emf.createEntityManager();      
+        System.out.println();  
 
         Service service = new Service();
         Client client = service.rechercherClientParId((long)1);
@@ -307,47 +354,56 @@ public class Main {
             System.out.println(medium);
         });
     }
-    
-    public static void testerAuthentificationEmploye() {
-        System.out.println();
-        System.out.println("**** testerAuthentificationEmploye() ****");
-        System.out.println();
-        
+
+    private static void testerClientApresConsultation() {
         Service service = new Service();
-        Employe employe;
-        String mail;
-        String motDePasse;
+        Client client = service.rechercherClientParId((long)1);
+        afficherClient(client);
+        System.out.println(client.getConsultations());
+        System.out.println();
+        System.out.println();
+    }
 
-        mail = "david-alexander.abdiullina@laposte.net";
-        motDePasse = "employe2";
-        employe = service.authentifierEmploye(mail, motDePasse);
-        if (employe != null) {
-            System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
-            afficherEmploye(employe);
-        } else {
-            System.out.println("Authentification échouée avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
-        }
+    private static void listerEmployes() {
+        Service service = new Service();
+        List<Employe> employes = service.listerEmployes();
+        employes.forEach((employe) -> {
+            System.out.println(employe);
+        });
+    }
 
-        mail = "moez.woagner@laposte.net";
-        motDePasse = "employe3";
-        employe = service.authentifierEmploye(mail, motDePasse);
-        if (employe != null) {
-            System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
-            afficherEmploye(employe);
-        } else {
-            System.out.println("Authentification échouée avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
-        }
-
-        mail = "employe.fictif@insa-lyon.fr";
-        motDePasse = "********";
-        employe = service.authentifierEmploye(mail, motDePasse);
-        if (employe != null) {
-            System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
-            afficherEmploye(employe);
-        } else {
-            System.out.println("Authentification échouée avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+    private static void testerAstroNetApi() {
+        
+        System.out.println();
+        System.out.println("**** testerAstroNetApi() ****");
+        System.out.println(); 
+        
+        try {
+            AstroTest astroApi = new AstroTest();
+            Service service = new Service();
+            Client client = service.rechercherClientParId((long)1);
+            
+            // pour obtenir le profil astro d'un client
+            List<String> profilClient = astroApi.getProfil(client.getPrenom(), client.getDateDeNaissance());
+            String signeZodiaque = profilClient.get(0);
+            String signeChinois = profilClient.get(1);
+            String couleur = profilClient.get(2);
+            String animal = profilClient.get(3);
+            
+            System.out.println("signeZo = " + signeZodiaque + " ; signeChi = " + signeChinois + " ; couleur = " + couleur + " ; animal = " + animal);
+            
+            // pour obtenir des prédictions
+            List<String> predictions = astroApi.getPredictions(couleur, animal, 1, 2, 3);
+            String predictionAmour = predictions.get(0);
+            String predictionSante = predictions.get(1);
+            String predictionTravail = predictions.get(2);
+            
+            System.out.println("predictionAmour = " + predictionAmour + " ; predictionSante = " + predictionSante + " ; predictionTravail = " + predictionTravail);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+}
 
 
 //    public static void testerInscriptionClient() {
@@ -575,53 +631,3 @@ public class Main {
 //        System.out.println();
 //
 //    }
-
-    private static void testerClientApresConsultation() {
-        Service service = new Service();
-        Client client = service.rechercherClientParId((long)1);
-        afficherClient(client);
-        System.out.println(client.getConsultations());
-        System.out.println();
-        System.out.println();
-    }
-
-    private static void listerEmployes() {
-        Service service = new Service();
-        List<Employe> employes = service.listerEmployes();
-        employes.forEach((employe) -> {
-            System.out.println(employe);
-        });
-    }
-
-    private static void testerAstroNetApi() {
-        
-        System.out.println();
-        System.out.println("**** testerAstroNetApi() ****");
-        System.out.println(); 
-        
-        try {
-            AstroTest astroApi = new AstroTest();
-            Service service = new Service();
-            Client client = service.rechercherClientParId((long)1);
-            
-            // pour obtenir le profil astro d'un client
-            List<String> profilClient = astroApi.getProfil(client.getPrenom(), client.getDateDeNaissance());
-            String signeZodiaque = profilClient.get(0);
-            String signeChinois = profilClient.get(1);
-            String couleur = profilClient.get(2);
-            String animal = profilClient.get(3);
-            
-            System.out.println("signeZo = " + signeZodiaque + " ; signeChi = " + signeChinois + " ; couleur = " + couleur + " ; animal = " + animal);
-            
-            // pour obtenir des prédictions
-            List<String> predictions = astroApi.getPredictions(couleur, animal, 1, 2, 3);
-            String predictionAmour = predictions.get(0);
-            String predictionSante = predictions.get(1);
-            String predictionTravail = predictions.get(2);
-            
-            System.out.println("predictionAmour = " + predictionAmour + " ; predictionSante = " + predictionSante + " ; predictionTravail = " + predictionTravail);
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-}

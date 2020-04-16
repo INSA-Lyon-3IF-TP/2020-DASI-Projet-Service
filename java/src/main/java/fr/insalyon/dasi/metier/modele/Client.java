@@ -143,6 +143,4 @@ public class Client implements Serializable {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return "Client : id=" + id + ", nom=" + nom + ", prenom=" + prenom + ", civilite=" + civilite + ", dateDeNaissance=" + simpleDateFormat.format(dateDeNaissance) + ", telephone=" + telephone + ", adresse=" + adresse + ", mail=" + mail + ", motDePasse=" + motDePasse + ", profilAstral=" + profilAstral;
     }
-    
-
 }

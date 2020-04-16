@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.insalyon.dasi.metier.modele;
 
 import java.io.Serializable;
@@ -20,6 +15,7 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class Employe implements Serializable {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,7 +28,6 @@ public class Employe implements Serializable {
     private String mail;
     private String motDePasse;
     private Boolean estOccupe = false;
-    
     @OneToMany(mappedBy = "employe")
     private List<Consultation> consultations;
     
@@ -129,5 +124,4 @@ public class Employe implements Serializable {
     public String toString() {
         return "Employe{" + "id=" + id + ", nom=" + nom + ", prenom=" + prenom + ", genre=" + genre + ", telephone=" + telephone + ", adresse=" + adresse + ", mail=" + mail + ", motDePasse=" + motDePasse + ", estOccupe=" + estOccupe + '}';
     }
-    
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.insalyon.dasi.dao;
 
 import fr.insalyon.dasi.metier.modele.Medium;
@@ -15,6 +10,7 @@ import javax.persistence.TypedQuery;
  * @author Nicolas Trouin et Fabien Narboux
  */
 public class MediumDao {
+    
     public void creer(Medium medium) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         em.persist(medium);
@@ -29,5 +25,10 @@ public class MediumDao {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         TypedQuery<Medium> query = em.createQuery("SELECT m FROM Medium m ORDER BY m.denomination", Medium.class);
         return query.getResultList();
+    }
+    
+    public void modifier(Medium medium) {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        em.merge(medium);
     }
 }

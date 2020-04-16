@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.insalyon.dasi.metier.modele;
 
 import java.io.Serializable;
@@ -20,6 +15,7 @@ import javax.persistence.Temporal;
  */
 @Entity
 public class Consultation implements Serializable {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,13 +26,10 @@ public class Consultation implements Serializable {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date heureFin;
     private String commentaire;
-    
     @ManyToOne
     private Client client;
-    
     @ManyToOne
-    private Employe employe;
-        
+    private Employe employe;  
     @ManyToOne
     private Medium medium;
 
@@ -114,6 +107,4 @@ public class Consultation implements Serializable {
     public String toString() {
         return "Consultation{" + "id=" + id + ", heureDemande=" + heureDemande + ", heureDebut=" + heureDebut + ", heureFin=" + heureFin + ", commentaire=" + commentaire + ", client=" + client + ", employe=" + employe + ", medium=" + medium + '}';
     }
-    
-    
 }
