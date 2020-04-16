@@ -23,6 +23,11 @@ public class EmployeDao {
         em.persist(employe);
     }
     
+    public void modifier(Employe employe) {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        em.merge(employe);
+    }
+    
     public Employe chercherParId(Long employeId) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         return em.find(Employe.class, employeId); // renvoie null si l'identifiant n'existe pas
@@ -46,8 +51,6 @@ public class EmployeDao {
         return query.getResultList();
     }
     
-    
-
     public Employe chercherParGenreEtDisponible(Genre mediumGenre) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         TypedQuery<Employe> query = em.createQuery("SELECT e FROM Employe e WHERE e.genre = :genre and e.estOccupe = FALSE", Employe.class);
@@ -55,9 +58,9 @@ public class EmployeDao {
         List<Employe> employes = query.getResultList();
         Employe result = null;
         if (!employes.isEmpty()) {
-            Collections.sort(employes, (Employe employe1, Employe employe2) -> employe1.getConsultations().size() > employe2.getConsultations().size() ? -1 : (employe1.getConsultations().size() < employe2.getConsultations().size()) ? 1 : 0 // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-            );
-            result = employes.get(0); // premier de la liste
+            // Ordre croissant
+            Collections.sort(employes, (Employe employe1, Employe employe2) -> employe1.getConsultations().size() > employe2.getConsultations().size() ? 1 : (employe1.getConsultations().size() < employe2.getConsultations().size()) ? -1 : 0);
+            result = employes.get(0); // premier de la liste, celui avec le moins de consultations
         }
         return result;
     }
