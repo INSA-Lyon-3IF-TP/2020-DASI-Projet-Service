@@ -11,6 +11,7 @@ import fr.insalyon.dasi.metier.modele.Medium;
 import fr.insalyon.dasi.metier.modele.ProfilAstral;
 import fr.insalyon.dasi.metier.modele.Spirite;
 import fr.insalyon.dasi.metier.service.Service;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,6 +21,7 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import util.AstroTest;
 
 /**
  *
@@ -54,6 +56,8 @@ public class Main {
         //testerAuthentificationEmploye();
         
         //listerEmployes();
+        
+        testerAstroNetApi();
         
         JpaUtil.destroy();
     }
@@ -550,5 +554,32 @@ public class Main {
         employes.forEach((employe) -> {
             System.out.println(employe);
         });
+    }
+
+    private static void testerAstroNetApi() {
+        try {
+            AstroTest astroApi = new AstroTest();
+            Service service = new Service();
+            Client client = service.rechercherClientParId((long)1);
+            
+            // pour obtenir le profil astro d'un client
+            List<String> profilClient = astroApi.getProfil(client.getPrenom(), client.getDateDeNaissance());
+            String signeZodiaque = profilClient.get(0);
+            String signeChinois = profilClient.get(1);
+            String couleur = profilClient.get(2);
+            String animal = profilClient.get(3);
+            
+            System.out.println("signeZo = " + signeZodiaque + " ; signeChi = " + signeChinois + " ; couleur = " + couleur + " ; animal = " + animal);
+            
+            // pour obtenir des prédictions
+            List<String> predictions = astroApi.getPredictions(couleur, animal, 1, 2, 3);
+            String predictionAmour = predictions.get(0);
+            String predictionSante = predictions.get(1);
+            String predictionTravail = predictions.get(2);
+            
+            System.out.println("predictionAmour = " + predictionAmour + " ; predictionSante = " + predictionSante + " ; predictionTravail = " + predictionTravail);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
