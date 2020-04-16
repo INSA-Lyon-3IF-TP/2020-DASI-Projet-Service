@@ -49,6 +49,12 @@ public class Main {
         
         testerPrendreRendezVous();
         
+        testerDebuterConsultation();
+        
+        testerTerminerConsultation();
+        
+        testerPrendreRendezVous();
+        
         //testerClientApresConsultation();
         
         //listerMediums();
@@ -203,6 +209,7 @@ public class Main {
         Medium med1 = new Cartomancien("Mme Irma",Genre.Feminin,"Comprenez votre entourage grâce à mes cartes ! Résultats rapides.");
         Medium med2 = new Spirite("Gwenaëlle",Genre.Feminin,"Spécialiste des grandes conversations au-delà de TOUTES les frontières.", "Boule de crital");
         Medium med3 = new Astrologue("Serena",Genre.Feminin,"Basée à Champigny-sur-Marne, Serena vous révèlera votre avenir pour éclairer votre passé.","École Normale Supérieure d’Astrologie (ENS-Astro)",2006);
+        Medium med4 = new Spirite("Professeur Tran",Genre.Masculin,"Votre avenir est devant vous : regardons-le ensemble !","Marc de café, boule de cristal, oreilles de lapin");
 
         
         System.out.println();
@@ -210,6 +217,7 @@ public class Main {
         afficherMedium(med1);
         afficherMedium(med2);
         afficherMedium(med3);
+        afficherMedium(med4);
         System.out.println();
 
         try {
@@ -217,6 +225,7 @@ public class Main {
             em.persist(med1);
             em.persist(med2);
             em.persist(med3);
+            em.persist(med4);
             em.getTransaction().commit();
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service", ex);
@@ -235,13 +244,14 @@ public class Main {
         afficherMedium(med1);
         afficherMedium(med2);
         afficherMedium(med3);
+        afficherMedium(med4);
         System.out.println();
     }
     
     public static void testerPrendreRendezVous() {
         
         System.out.println();
-        System.out.println("**** testPrendreRendezVous() ****");
+        System.out.println("**** testerPrendreRendezVous() ****");
         System.out.println();
         
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("DASI-PU");
@@ -249,7 +259,7 @@ public class Main {
 
         Service service = new Service();
         Client client = service.rechercherClientParId((long)1);
-        Medium medium = service.rechercherMediumParId((long)1);
+        Medium medium = service.rechercherMediumParId((long)4);
         
 
         Consultation consultation = service.prendreRendezVous(client,medium);
@@ -263,6 +273,33 @@ public class Main {
         }
     }
 
+    private static void testerDebuterConsultation() {
+        
+        System.out.println();
+        System.out.println("**** testerDebuterConsultation() ****");
+        System.out.println();
+        
+        Service service = new Service();
+        Consultation c = service.rechercherConsultationParId((long)1);
+        service.debuterConsultation(c);
+        System.out.println("** Consultation démarrée ");
+        System.out.println(c);
+        System.out.println();
+    }
+    
+    private static void testerTerminerConsultation() {
+        
+        System.out.println();
+        System.out.println("**** testerTerminerConsultation() ****");
+        System.out.println();
+        
+        Service service = new Service();
+        Consultation c = service.rechercherConsultationParId((long)1);
+        service.terminerConsultation(c);
+        System.out.println("** Consultation terminée ");
+        System.out.println(c);
+    }
+       
     private static void listerMediums() {
         Service service = new Service();
         List<Medium> mediums = service.listerMediums();
@@ -557,6 +594,11 @@ public class Main {
     }
 
     private static void testerAstroNetApi() {
+        
+        System.out.println();
+        System.out.println("**** testerAstroNetApi() ****");
+        System.out.println(); 
+        
         try {
             AstroTest astroApi = new AstroTest();
             Service service = new Service();
