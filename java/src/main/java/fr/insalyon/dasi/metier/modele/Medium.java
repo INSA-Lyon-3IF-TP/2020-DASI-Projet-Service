@@ -21,7 +21,7 @@ import javax.persistence.OneToMany;
  * @author Nicolas Trouin et Fabien Narboux
  */
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Medium implements Serializable{
     
     @Id
