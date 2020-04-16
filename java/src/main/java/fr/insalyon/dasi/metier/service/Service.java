@@ -5,10 +5,13 @@ import fr.insalyon.dasi.dao.ConsultationDao;
 import fr.insalyon.dasi.dao.EmployeDao;
 import fr.insalyon.dasi.dao.JpaUtil;
 import fr.insalyon.dasi.dao.MediumDao;
+import fr.insalyon.dasi.metier.modele.Astrologue;
+import fr.insalyon.dasi.metier.modele.Cartomancien;
 import fr.insalyon.dasi.metier.modele.Client;
 import fr.insalyon.dasi.metier.modele.Consultation;
 import fr.insalyon.dasi.metier.modele.Employe;
 import fr.insalyon.dasi.metier.modele.Medium;
+import fr.insalyon.dasi.metier.modele.Spirite;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -245,12 +248,13 @@ public class Service {
         return resultat;
     }
     
-    public void commencerConsultation(Consultation consultation) {
-        Date heureDebut = new Date();
-        consultation.setHeureDebut(heureDebut);
+    public void debuterConsultation(Consultation consultation) {
+        consultation.setHeureDebut(new Date());
         JpaUtil.creerContextePersistance();
         try {
+            JpaUtil.ouvrirTransaction();
             consultationDao.modifier(consultation);
+            JpaUtil.validerTransaction();
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service commencerConsultation(consultation)", ex);
         } finally {
@@ -258,12 +262,16 @@ public class Service {
         }
     }
     
-    public void arreterConsultation(Consultation consultation) {
-        Date heureFin = new Date();
-        consultation.setHeureFin(heureFin);
+    public void terminerConsultation(Consultation consultation) {
+        consultation.setHeureFin(new Date());
+        Employe employe = consultation.getEmploye();
+        employe.setEstOccupe(Boolean.FALSE);
         JpaUtil.creerContextePersistance();
         try {
+            JpaUtil.ouvrirTransaction();
             consultationDao.modifier(consultation);
+            employeDao.modifier(employe);
+            JpaUtil.validerTransaction();
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service arreterConsultation(consultation)", ex);
         } finally {
