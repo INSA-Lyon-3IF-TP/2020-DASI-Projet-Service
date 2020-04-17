@@ -61,18 +61,19 @@ public class EmployeDao {
         
         return result;
     }
-    
-    public Employe chercherParGenreEtDisponible(Genre mediumGenre) {
+
+    public List<Employe> chercherParGenreEtDisponible(Genre mediumGenre) {
+
         EntityManager em = JpaUtil.obtenirContextePersistance();
+        List<Employe> employes = null;
         TypedQuery<Employe> query = em.createQuery("SELECT e FROM Employe e WHERE e.genre = :genre and e.estOccupe = FALSE", Employe.class);
         query.setParameter("genre", mediumGenre); // correspond au paramètre ":genre" dans la requête
-        List<Employe> employes = query.getResultList();
-        Employe result = null;
+        employes = query.getResultList();
         if (!employes.isEmpty()) {
             // Ordre croissant
             Collections.sort(employes, (Employe employe1, Employe employe2) -> employe1.getConsultations().size() > employe2.getConsultations().size() ? 1 : (employe1.getConsultations().size() < employe2.getConsultations().size()) ? -1 : 0);
-            result = employes.get(0); // premier de la liste, celui avec le moins de consultations
+            //result = employes.get(0); // premier de la liste, celui avec le moins de consultations
         }
-        return result;
+        return employes;
     }
 }
