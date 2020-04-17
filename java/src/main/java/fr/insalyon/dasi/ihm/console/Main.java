@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -56,13 +57,18 @@ public class Main {
             //Tests consultation
         
         testerPrendreRendezVous();
-        //testerDebuterConsultation();
-        //testerTerminerConsultation();        
+        testerDebuterConsultation();
+        testerTerminerConsultation();  
+        testerPrendreRendezVous();
+        testerDebuterConsultation();
+        testerTerminerConsultation();  
         //testerClientApresConsultation();
        
             //Tests AstroNetApi
 
         //testerAstroNetApi();
+        
+        testerStats();
         
         JpaUtil.destroy();
     }
@@ -383,6 +389,14 @@ public class Main {
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private static void testerStats() {
+        Service service = new Service();
+        Map<Employe, Long> employes = service.répartitionClientsParEmploye();
+        employes.entrySet().forEach((entry) -> {
+            System.out.println(entry.getKey() + " -- " + entry.getValue());
+        });
     }
 }
 
