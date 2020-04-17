@@ -557,7 +557,7 @@ public class Main {
     
     private static void testerStats() {
         Service service = new Service();
-        Map<Employe, Long> employes = service.répartitionClientsParEmploye();
+        Map<Employe, Long> employes = service.repartitionClientsParEmploye();
         employes.entrySet().forEach((entry) -> {
             System.out.println(entry.getKey() + " -- " + entry.getValue());
         });

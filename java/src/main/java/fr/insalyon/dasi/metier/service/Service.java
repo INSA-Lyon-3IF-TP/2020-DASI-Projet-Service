@@ -473,7 +473,7 @@ public class Service {
     
     // Statistiques
     
-    public Map<Employe, Long> répartitionClientsParEmploye() {
+    public Map<Employe, Long> repartitionClientsParEmploye() {
         Map<Employe, Long> resultat = null;
         JpaUtil.creerContextePersistance();
         try {
