@@ -11,6 +11,7 @@ import fr.insalyon.dasi.metier.modele.Consultation;
 import fr.insalyon.dasi.metier.modele.Employe;
 import fr.insalyon.dasi.metier.modele.Medium;
 import fr.insalyon.dasi.metier.modele.ProfilAstral;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -340,5 +341,19 @@ public class Service {
             JpaUtil.fermerContextePersistance();
         }
         return resultat;
+    }
+    
+    // Predictions
+    
+    public List<String> getPredictions(int niveauAmour, int niveauSante, int niveauTravail, Client client) {     
+        AstroTest astroApi = new AstroTest();
+        List<String> predictions = null;
+        try {
+            predictions = astroApi.getPredictions(client.getProfilAstral().getCouleur(), client.getProfilAstral().getAnimal(), niveauAmour, niveauSante, niveauTravail);
+        } catch(IOException ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service getPredictions(niveauAmour, niveauSante, niveauTravail, client)", ex);
+        } finally {
+            return predictions;
+        }
     }
 }
