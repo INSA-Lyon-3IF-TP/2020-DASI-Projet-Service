@@ -33,6 +33,8 @@ public class Main {
     public static void main(String[] args) {
         JpaUtil.init();
         
+        Service service = new Service();
+        
             //Tests client
 
         initialiserClients();            
@@ -45,18 +47,20 @@ public class Main {
         
             //Tests employe
         
-        initialiserEmployes();
+        service.initialiserEmployes(Boolean.TRUE);
         //testerAuthentificationEmploye();
         //listerEmployes();
         
             //Tests mediums
         
-        initialiserMediums();
+        service.initialiserMediums(Boolean.TRUE);
         //listerMediums();
         
             //Tests consultation
         
         testerPrendreRendezVous();
+        testerDebuterConsultation();
+        testerTerminerConsultation();  
         //testerDebuterConsultation();
         //testerTerminerConsultation();  
         //testerPrendreRendezVous();
@@ -69,7 +73,7 @@ public class Main {
         //testerAstroNetApi();
         testerPredictions();
         
-        testerStats();
+        //testerStats();
         
         JpaUtil.destroy();
     }
@@ -142,53 +146,6 @@ public class Main {
     }
     
     //Employe
-    
-    public static void initialiserEmployes() {
-        
-        System.out.println();
-        System.out.println("**** initialiserEmployes() ****");
-        System.out.println();
-        
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("DASI-PU");
-        EntityManager em = emf.createEntityManager();
-
-        Employe emp1 = new Employe("SING", "Ainhoa", Genre.Feminin, "0705224200", "4 Rue Phelypeaux, Villeurbanne", "asing8183@free.fr", "employe1");
-        Employe emp2 = new Employe("ABDIULLINA", "David Alexander", Genre.Masculin, "0590232772", "8 Rue Wilhelmine, Villeurbanne", "david-alexander.abdiullina@laposte.net", "employe2");
-        Employe emp3 = new Employe("WOAGNER", "Moez", Genre.Masculin, "0832205629", "6 Rue Camille Koechlin, Villeurbanne", "moez.woagner@laposte.net", "employe3");
-
-        
-        System.out.println();
-        System.out.println("** Employes avant persistance: ");
-        afficherEmploye(emp1);
-        afficherEmploye(emp2);
-        afficherEmploye(emp3);
-        System.out.println();
-
-        try {
-            em.getTransaction().begin();
-            em.persist(emp1);
-            em.persist(emp2);
-            em.persist(emp3);
-            em.getTransaction().commit();
-        } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service", ex);
-            try {
-                em.getTransaction().rollback();
-            }
-            catch (IllegalStateException ex2) {
-                // Ignorer cette exception...
-            }
-        } finally {
-            em.close();
-        }
-
-        System.out.println();
-        System.out.println("** Employes après persistance: ");
-        afficherEmploye(emp1);
-        afficherEmploye(emp2);
-        afficherEmploye(emp3);
-        System.out.println();
-    }
     
     public static void testerAuthentificationEmploye() {
         System.out.println();
