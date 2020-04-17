@@ -61,6 +61,8 @@ public class Main {
         testerPrendreRendezVous();
         testerDebuterConsultation();
         testerTerminerConsultation();  
+        //testerDebuterConsultation();
+        //testerTerminerConsultation();  
         //testerPrendreRendezVous();
         //testerDebuterConsultation();
         //testerTerminerConsultation();  
@@ -69,6 +71,7 @@ public class Main {
             //Tests AstroNetApi
 
         //testerAstroNetApi();
+        testerPredictions();
         
         //testerStats();
         
@@ -354,6 +357,18 @@ public class Main {
         employes.entrySet().forEach((entry) -> {
             System.out.println(entry.getKey() + " -- " + entry.getValue());
         });
+    }
+
+    private static void testerPredictions() {
+        Service service = new Service();
+        Client client = service.rechercherClientParId((long)1);
+        List<String> predictions = service.getPredictions(3, 2, 1, client);
+        System.out.println("");
+        System.out.println("~<[ Prédictions ]>~");
+        System.out.println("[ Amour ] " + predictions.get(0));
+        System.out.println("[ Santé ] " + predictions.get(1));
+        System.out.println("[Travail] " + predictions.get(2));
+        System.out.println("");
     }
 }
 
