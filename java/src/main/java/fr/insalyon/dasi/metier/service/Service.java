@@ -37,9 +37,9 @@ public class Service {
         try {
             JpaUtil.ouvrirTransaction();
             AstroTest astroApi = new AstroTest();
-            List<String> profilClient = astroApi.getProfil(client.getPrenom(), client.getDateDeNaissance());
+            /*List<String> profilClient = astroApi.getProfil(client.getPrenom(), client.getDateDeNaissance());
             ProfilAstral profilAstral = new ProfilAstral(profilClient.get(0), profilClient.get(1), profilClient.get(2), profilClient.get(3));
-            client.setProfilAstral(profilAstral);
+            client.setProfilAstral(profilAstral);*/
             clientDao.creer(client);
             JpaUtil.validerTransaction();
             Message.envoyerConfirmationInscription(client);
@@ -234,35 +234,43 @@ public class Service {
     
     public Consultation prendreRendezVous(Client client,Medium medium) {
         Consultation resultat = null;
+        boolean employeTrouve = Boolean.FALSE;
         JpaUtil.creerContextePersistance();
         try {
             JpaUtil.ouvrirTransaction();
-            Employe employe = employeDao.chercherParGenreEtDisponible(medium.getGenre());
+            List<Employe> employes = employeDao.chercherParGenreEtDisponible(medium.getGenre());
             //System.out.println(employe);
-            if(employe != null) {
-                resultat = new Consultation(new Date(),client,employe,medium);
-                client.addConsultation(resultat);
-                clientDao.modifier(client); //Modification du client
-                employe.addConsultation(resultat);
-                employe.setEstOccupe(Boolean.TRUE);
-                employeDao.modifier(employe); //Modification de l'employe
-                medium = resultat.getMedium();
-                medium.addConsultation(resultat);
-                mediumDao.modifier(medium); //Modification du medium
-                consultationDao.creer(resultat);
-                JpaUtil.validerTransaction(); //revoir version employe si acces concurrent
-                //Envoyer le mail ici
-                Message.envoyerConfirmationConsultation(resultat);
-                Message.envoyerNotificationConsultationEmploye(resultat);
+            if(employes != null) {
+                for(Employe e : employes) {
+                    try {
+                        resultat = new Consultation(new Date(),client,e,medium);
+                        e.addConsultation(resultat);
+                        e.setEstOccupe(Boolean.TRUE);
+                        employeDao.modifier(e); //Modification de l'employe
+                        client.addConsultation(resultat);
+                        clientDao.modifier(client); //Modification du client
+                        medium.addConsultation(resultat);
+                        mediumDao.modifier(medium); //Modification du medium
+                        consultationDao.creer(resultat);
+                        JpaUtil.validerTransaction();
+                    } catch (OptimisticLockException oex) {
+                        Logger.getAnonymousLogger().log(Level.WARNING, "Conflit sur l'employe, plusieurs accès en même temps ! On utilise l'employe suivant", oex);
+                        e.setEstOccupe(Boolean.FALSE);
+                        e.removeConsultation(resultat);
+                        client.removeConsultation(resultat);
+                        medium.removeConsultation(resultat);
+                        continue; 
+                    }
+                    employeTrouve = Boolean.TRUE;
+                    Message.envoyerConfirmationConsultation(resultat);
+                    Message.envoyerNotificationConsultationEmploye(resultat);
+                 }
+
             }
-            else{
+            if(employeTrouve == Boolean.FALSE){
                 JpaUtil.annulerTransaction();
                 Message.envoyerEchecDemandeConsultation(client, medium);
             }
-        } catch (OptimisticLockException oex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Conflit sur l'employe, plusieurs accès en même temps !", oex);
-            JpaUtil.annulerTransaction();
-            resultat = null;
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service prendreRendezVous(Client client,Medium medium)", ex);
             JpaUtil.annulerTransaction();

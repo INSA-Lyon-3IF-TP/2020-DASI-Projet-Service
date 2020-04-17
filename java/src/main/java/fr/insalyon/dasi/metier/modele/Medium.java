@@ -67,6 +67,10 @@ public abstract class Medium implements Serializable{
         this.consultations.add(consultation);
     }
     
+    public void removeConsultation(Consultation consultation) {
+        this.consultations.remove(consultation);
+    }
+    
     @Override
     public String toString() {
         return "Medium{" + "id=" + id + ", denomination=" + denomination + ", genre=" + genre + ", presentation=" + presentation + '}';
