@@ -137,6 +137,10 @@ public class Client implements Serializable {
     public void addConsultation(Consultation consultation) {
         this.consultations.add(consultation);
     }
+    
+    public void removeConsultation(Consultation consultation) {
+        this.consultations.remove(consultation);
+    }
   
     @Override
     public String toString() {
