@@ -1,5 +1,6 @@
 package fr.insalyon.dasi.metier.service;
 
+import util.Message;
 import fr.insalyon.dasi.dao.ClientDao;
 import fr.insalyon.dasi.dao.ConsultationDao;
 import fr.insalyon.dasi.dao.EmployeDao;
@@ -11,11 +12,13 @@ import fr.insalyon.dasi.metier.modele.Client;
 import fr.insalyon.dasi.metier.modele.Consultation;
 import fr.insalyon.dasi.metier.modele.Employe;
 import fr.insalyon.dasi.metier.modele.Medium;
+import fr.insalyon.dasi.metier.modele.ProfilAstral;
 import fr.insalyon.dasi.metier.modele.Spirite;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import util.AstroTest;
 
 /**
  *
@@ -35,8 +38,13 @@ public class Service {
         JpaUtil.creerContextePersistance();
         try {
             JpaUtil.ouvrirTransaction();
+            AstroTest astroApi = new AstroTest();
+            List<String> profilClient = astroApi.getProfil(client.getPrenom(), client.getDateDeNaissance());
+            ProfilAstral profilAstral = new ProfilAstral(profilClient.get(0), profilClient.get(1), profilClient.get(2), profilClient.get(3));
+            client.setProfilAstral(profilAstral);
             clientDao.creer(client);
             JpaUtil.validerTransaction();
+            Message.envoyerConfirmationInscription(client);
             resultat = client.getId();
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service inscrireClient(client)", ex);
@@ -231,7 +239,7 @@ public class Service {
         try {
             JpaUtil.ouvrirTransaction();
             Employe employe = employeDao.chercherParGenreEtDisponible(medium.getGenre());
-            System.out.println(employe);
+            //System.out.println(employe);
             if(employe != null) {
                 resultat = new Consultation(new Date(),client,employe,medium);
                 client.addConsultation(resultat);
@@ -245,6 +253,7 @@ public class Service {
                 consultationDao.creer(resultat);
                 JpaUtil.validerTransaction(); //revoir version employe si acces concurrent
                 //Envoyer le mail ici
+                Message.envoyerConfirmationConsultation(resultat);
             }
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service prendreRendezVous(Client client,Medium medium)", ex);
