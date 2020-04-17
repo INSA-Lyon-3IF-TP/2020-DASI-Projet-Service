@@ -18,6 +18,7 @@ import fr.insalyon.dasi.metier.modele.Spirite;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -174,6 +175,46 @@ public class Service {
         
     }
     
+    // Connexion commune
+    
+    public Map<String,Long> authentifierUtilisateur(String mail, String motDePasse){
+        Map<String, Long> resultat = new HashMap();
+        resultat.put("Employe", null);
+        resultat.put("Client", null);
+        JpaUtil.creerContextePersistance();
+        try {
+            // Recherche du client
+            Employe employe = employeDao.chercherParMail(mail);
+            if (employe != null) {
+                // Vérification du mot de passe
+                if (employe.getMotDePasse().equals(motDePasse)) {
+                    resultat.replace("Employe", employe.getId());
+                }
+            }
+            // Recherche du client
+            Client client = clientDao.chercherParMail(mail);
+            if (client != null) {
+                // Vérification du mot de passe
+                if (client.getMotDePasse().equals(motDePasse)) {  
+                    resultat.replace("Client", client.getId());
+                }
+            }
+            
+            if(resultat.get("Employe") != null && resultat.get("Client") != null){
+                resultat.replace("Employe", null);
+                resultat.replace("Client", null);
+                return null;
+            }
+            
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service authentifierUtilisateur(mail,motDePasse)", ex);
+            resultat = null;
+        } finally {
+            JpaUtil.fermerContextePersistance();
+        }
+        
+        return resultat;
+    }
     
     //Gestion des clients
 
@@ -209,27 +250,6 @@ public class Service {
             resultat.getConsultations().size(); // Pour forcer à charger la liste
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service rechercherClientParId(id)", ex);
-            resultat = null;
-        } finally {
-            JpaUtil.fermerContextePersistance();
-        }
-        return resultat;
-    }
-
-    public Client authentifierClient(String mail, String motDePasse) {
-        Client resultat = null;
-        JpaUtil.creerContextePersistance();
-        try {
-            // Recherche du client
-            Client client = clientDao.chercherParMail(mail);
-            if (client != null) {
-                // Vérification du mot de passe
-                if (client.getMotDePasse().equals(motDePasse)) {
-                    resultat = client;
-                }
-            }
-        } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service authentifierClient(mail,motDePasse)", ex);
             resultat = null;
         } finally {
             JpaUtil.fermerContextePersistance();
@@ -281,27 +301,6 @@ public class Service {
             resultat.getConsultations().size(); // Pour forcer à charger la liste
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service rechercherEmployeParId(id)", ex);
-            resultat = null;
-        } finally {
-            JpaUtil.fermerContextePersistance();
-        }
-        return resultat;
-    }
-    
-    public Employe authentifierEmploye(String mail, String motDePasse) {
-        Employe resultat = null;
-        JpaUtil.creerContextePersistance();
-        try {
-            // Recherche du client
-            Employe employe = employeDao.chercherParMail(mail);
-            if (employe != null) {
-                // Vérification du mot de passe
-                if (employe.getMotDePasse().equals(motDePasse)) {
-                    resultat = employe;
-                }
-            }
-        } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service authentifierEmploye(mail,motDePasse)", ex);
             resultat = null;
         } finally {
             JpaUtil.fermerContextePersistance();
