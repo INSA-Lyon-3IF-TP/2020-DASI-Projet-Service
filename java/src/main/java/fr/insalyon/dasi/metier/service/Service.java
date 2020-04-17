@@ -37,9 +37,9 @@ public class Service {
         try {
             JpaUtil.ouvrirTransaction();
             AstroTest astroApi = new AstroTest();
-            /*List<String> profilClient = astroApi.getProfil(client.getPrenom(), client.getDateDeNaissance());
+            List<String> profilClient = astroApi.getProfil(client.getPrenom(), client.getDateDeNaissance());
             ProfilAstral profilAstral = new ProfilAstral(profilClient.get(0), profilClient.get(1), profilClient.get(2), profilClient.get(3));
-            client.setProfilAstral(profilAstral);*/
+            client.setProfilAstral(profilAstral);
             clientDao.creer(client);
             JpaUtil.validerTransaction();
             Message.envoyerConfirmationInscription(client);
