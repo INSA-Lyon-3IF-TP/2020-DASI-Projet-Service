@@ -46,8 +46,8 @@ public class Main {
         
             //Tests employe
         
-        //service.initialiserEmployes(Boolean.TRUE);
-        //testerAuthentificationEmploye();
+        service.initialiserEmployes(Boolean.TRUE);
+        testerAuthentificationUtilisateurs();
         //listerEmployes();
         
             //Tests mediums
@@ -351,45 +351,104 @@ public class Main {
     
     //Employe
     
-    public static void testerAuthentificationEmploye() {
+    public static void testerAuthentificationUtilisateurs() {
         System.out.println();
-        System.out.println("**** testerAuthentificationEmploye() ****");
+        System.out.println("**** testerAuthentificationUtilisateurs() ****");
         System.out.println();
         
         Service service = new Service();
         Employe employe;
+        Client client;
         String mail;
         String motDePasse;
 
         mail = "david-alexander.abdiullina@laposte.net";
         motDePasse = "employe2";
-        employe = service.authentifierEmploye(mail, motDePasse);
-        if (employe != null) {
+        Map<String, Long> result = service.authentifierUtilisateur(mail, motDePasse);
+        if (result.get("Employe") != null ) {
             System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+            employe = service.rechercherEmployeParId(result.get("Employe"));
             afficherEmploye(employe);
-        } else {
+        } 
+        else if (result.get("Client") != null ) {
+            System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+            client = service.rechercherClientParId(result.get("Client"));
+            afficherClient(client);
+        } 
+        else {
             System.out.println("Authentification échouée avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
         }
 
         mail = "moez.woagner@laposte.net";
         motDePasse = "employe3";
-        employe = service.authentifierEmploye(mail, motDePasse);
-        if (employe != null) {
+        result = service.authentifierUtilisateur(mail, motDePasse);
+        if (result.get("Employe") != null ) {
             System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+            employe = service.rechercherEmployeParId(result.get("Employe"));
             afficherEmploye(employe);
-        } else {
+        } 
+        else if (result.get("Client") != null ) {
+            System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+            client = service.rechercherClientParId(result.get("Client"));
+            afficherClient(client);
+        } 
+        else {
             System.out.println("Authentification échouée avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
         }
 
         mail = "employe.fictif@insa-lyon.fr";
         motDePasse = "********";
-        employe = service.authentifierEmploye(mail, motDePasse);
-        if (employe != null) {
+        result = service.authentifierUtilisateur(mail, motDePasse);
+        if (result.get("Employe") != null ) {
             System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+            employe = service.rechercherEmployeParId(result.get("Employe"));
             afficherEmploye(employe);
-        } else {
+        } 
+        else if (result.get("Client") != null ) {
+            System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+            client = service.rechercherClientParId(result.get("Client"));
+            afficherClient(client);
+        } 
+        else {
             System.out.println("Authentification échouée avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
         }
+        
+        mail = "ada.lovelace@insa-lyon.fr";
+        motDePasse = "Ada1012";
+        result = service.authentifierUtilisateur(mail, motDePasse);
+        System.out.println(result);
+        if (result.get("Employe") != null ) {
+            System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+            employe = service.rechercherEmployeParId(result.get("Employe"));
+            afficherEmploye(employe);
+        } 
+        else if (result.get("Client") != null ) {
+            System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+            client = service.rechercherClientParId(result.get("Client"));
+            afficherClient(client);
+        } 
+        else {
+            System.out.println("Authentification échouée avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+        }
+        
+        mail = "ada.lovelace@insa-lyon.fr";
+        motDePasse = "faux mot de passe";
+        result = service.authentifierUtilisateur(mail, motDePasse);
+        if (result.get("Employe") != null ) {
+            System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+            employe = service.rechercherEmployeParId(result.get("Employe"));
+            afficherEmploye(employe);
+        } 
+        else if (result.get("Client") != null ) {
+            System.out.println("Authentification réussie avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+            client = service.rechercherClientParId(result.get("Client"));
+            afficherClient(client);
+        } 
+        else {
+            System.out.println("Authentification échouée avec le mail '" + mail + "' et le mot de passe '" + motDePasse + "'");
+        }
+        
+        
     }
     
     //Medium
