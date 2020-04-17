@@ -13,6 +13,7 @@ import fr.insalyon.dasi.metier.modele.Medium;
 import fr.insalyon.dasi.metier.modele.ProfilAstral;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.OptimisticLockException;
@@ -231,7 +232,6 @@ public class Service {
     
     // Gestion des consultations
     
-    
     public Consultation prendreRendezVous(Client client,Medium medium) {
         Consultation resultat = null;
         boolean employeTrouve = Boolean.FALSE;
@@ -324,5 +324,21 @@ public class Service {
         } finally {
             JpaUtil.fermerContextePersistance();
         }
+    }
+    
+    // Statistiques
+    
+    public Map<Employe, Long> répartitionClientsParEmploye() {
+        Map<Employe, Long> resultat = null;
+        JpaUtil.creerContextePersistance();
+        try {
+            resultat = employeDao.nombreClientsParEmploye();
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service listerEmployes()", ex);
+            resultat = null;
+        } finally {
+            JpaUtil.fermerContextePersistance();
+        }
+        return resultat;
     }
 }

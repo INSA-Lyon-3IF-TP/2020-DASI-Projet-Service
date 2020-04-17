@@ -3,8 +3,11 @@ package fr.insalyon.dasi.dao;
 import fr.insalyon.dasi.metier.modele.Employe;
 import fr.insalyon.dasi.metier.modele.Genre;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
+import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 
 /**
@@ -46,7 +49,21 @@ public class EmployeDao {
         return query.getResultList();
     }
     
+    public Map<Employe,Long> nombreClientsParEmploye() {
+        EntityManager em = JpaUtil.obtenirContextePersistance();
+        Map<Employe, Long> result = new HashMap();
+        List<Object[]> resultList = em.createQuery("SELECT c.employe, count(distinct c.client) as nb FROM Consultation c GROUP BY c.employe").getResultList();
+
+        // Place results in map
+        resultList.forEach((tuple) -> {
+            result.put((Employe)tuple[0], (long)tuple[1]);
+        });
+        
+        return result;
+    }
+
     public List<Employe> chercherParGenreEtDisponible(Genre mediumGenre) {
+
         EntityManager em = JpaUtil.obtenirContextePersistance();
         List<Employe> employes = null;
         TypedQuery<Employe> query = em.createQuery("SELECT e FROM Employe e WHERE e.genre = :genre and e.estOccupe = FALSE", Employe.class);
