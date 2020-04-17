@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.OptimisticLockException;
 import util.AstroTest;
 
 /**
@@ -257,6 +258,10 @@ public class Service {
                 Message.envoyerConfirmationConsultation(resultat);
                 Message.envoyerNotificationConsultationEmploye(resultat);
             }
+        } catch (OptimisticLockException oex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Conflit sur l'employe, plusieurs accès en même temps !", oex);
+            JpaUtil.annulerTransaction();
+            resultat = null;
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service prendreRendezVous(Client client,Medium medium)", ex);
             JpaUtil.annulerTransaction();
