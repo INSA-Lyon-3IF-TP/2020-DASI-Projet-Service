@@ -6,14 +6,11 @@ import fr.insalyon.dasi.dao.ConsultationDao;
 import fr.insalyon.dasi.dao.EmployeDao;
 import fr.insalyon.dasi.dao.JpaUtil;
 import fr.insalyon.dasi.dao.MediumDao;
-import fr.insalyon.dasi.metier.modele.Astrologue;
-import fr.insalyon.dasi.metier.modele.Cartomancien;
 import fr.insalyon.dasi.metier.modele.Client;
 import fr.insalyon.dasi.metier.modele.Consultation;
 import fr.insalyon.dasi.metier.modele.Employe;
 import fr.insalyon.dasi.metier.modele.Medium;
 import fr.insalyon.dasi.metier.modele.ProfilAstral;
-import fr.insalyon.dasi.metier.modele.Spirite;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -256,6 +253,10 @@ public class Service {
                 //Envoyer le mail ici
                 Message.envoyerConfirmationConsultation(resultat);
                 Message.envoyerNotificationConsultationEmploye(resultat);
+            }
+            else{
+                JpaUtil.annulerTransaction();
+                Message.envoyerEchecDemandeConsultation(client, medium);
             }
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service prendreRendezVous(Client client,Medium medium)", ex);
