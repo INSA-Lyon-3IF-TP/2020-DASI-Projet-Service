@@ -49,6 +49,7 @@ public class Service {
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service inscrireClient(client)", ex);
             JpaUtil.annulerTransaction();
+            Message.envoyerEchecInscription(client);
             resultat = null;
         } finally {
             JpaUtil.fermerContextePersistance();
@@ -254,6 +255,7 @@ public class Service {
                 JpaUtil.validerTransaction(); //revoir version employe si acces concurrent
                 //Envoyer le mail ici
                 Message.envoyerConfirmationConsultation(resultat);
+                Message.envoyerNotificationConsultationEmploye(resultat);
             }
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service prendreRendezVous(Client client,Medium medium)", ex);

@@ -3,6 +3,7 @@ package util;
 import fr.insalyon.dasi.metier.modele.Client;
 import fr.insalyon.dasi.metier.modele.Consultation;
 import fr.insalyon.dasi.metier.modele.Employe;
+import fr.insalyon.dasi.metier.modele.Genre;
 import fr.insalyon.dasi.metier.modele.Medium;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -19,6 +20,7 @@ public class Message {
     private final static PrintStream OUT = System.out;
     private final static SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd~HH:mm:ss");
     private final static SimpleDateFormat HORODATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy à HH:mm:ss");
+    private final static String MAIL_EXPEDITEUR = "contact@predict.if";
     
     private static void debut() {
         Date maintenant = new Date();
@@ -70,9 +72,25 @@ public class Message {
         
         notificationWriter.println("Bonjour " + client.getPrenom() + ". J’ai bien reçu votre demande de consultation du " + dateConsultation + ".");
         notificationWriter.println("Vous pouvez dès à présent me contacter au " + employe.getTelephone() + ". A tout de suite !");
-        notificationWriter.println("Médiumiquement vôtre, " + medium.getDenomination());
+        notificationWriter.println("Médiumiquement vôtre, " + medium.getDenomination() + ".");
                
         Message.envoyerNotification(client.getPrenom() + " " + client.getNom(), client.getTelephone(), message.toString());
+    }
+    
+    public static void envoyerNotificationConsultationEmploye(Consultation consultation){
+        Client client = consultation.getClient();
+        Medium medium = consultation.getMedium();
+        Employe employe = consultation.getEmploye();
+        String dateConsultation = HORODATE_FORMAT.format(consultation.getHeureDemande());
+        
+        StringWriter message = new StringWriter();
+        PrintWriter notificationWriter = new PrintWriter(message);
+        
+        notificationWriter.println("Bonjour " + employe.getPrenom() + ".");
+        notificationWriter.println("Consultation requise pour " + client.getCivilite() + " " + client.getPrenom() + " " + client.getNom() + ".");
+        notificationWriter.println("Médium à incarner : " + medium.getDenomination() + ".");
+               
+        Message.envoyerNotification(employe.getPrenom() + " " + employe.getNom(), employe.getTelephone(), message.toString());
     }
     
     public static void envoyerConfirmationInscription(Client client){   
@@ -83,7 +101,18 @@ public class Message {
         notificationWriter.println("Nous vous confirmons votre inscription au service PREDICT’IF.");
         notificationWriter.println("Rendez-vous vite sur notre site pour consulter votre profil astrologique et profiter des dons incroyables de nos mediums.");
                
-        Message.envoyerNotification(client.getPrenom() + " " + client.getNom(), client.getTelephone(), message.toString());
+        Message.envoyerMail(MAIL_EXPEDITEUR, client.getMail(), "Bienvenue chez PREDICT’IF", message.toString());
+    }
+    
+    public static void envoyerEchecInscription(Client client){   
+        StringWriter message = new StringWriter();
+        PrintWriter notificationWriter = new PrintWriter(message);
+        
+        notificationWriter.println("Bonjour " + client.getPrenom() + ".");
+        notificationWriter.println("Votre inscription au service PREDICT’IF a malencontreusement échoué...");
+        notificationWriter.println("Merci de recommencer ultérieurement.");
+               
+        Message.envoyerMail(MAIL_EXPEDITEUR, client.getMail(), "Echec de l’inscription chez PREDICT’IF", message.toString());
     }
     
     public static void main(String[] args) {
