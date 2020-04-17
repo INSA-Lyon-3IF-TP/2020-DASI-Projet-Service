@@ -6,18 +6,16 @@ import fr.insalyon.dasi.dao.ConsultationDao;
 import fr.insalyon.dasi.dao.EmployeDao;
 import fr.insalyon.dasi.dao.JpaUtil;
 import fr.insalyon.dasi.dao.MediumDao;
-import fr.insalyon.dasi.metier.modele.Astrologue;
-import fr.insalyon.dasi.metier.modele.Cartomancien;
 import fr.insalyon.dasi.metier.modele.Client;
 import fr.insalyon.dasi.metier.modele.Consultation;
 import fr.insalyon.dasi.metier.modele.Employe;
 import fr.insalyon.dasi.metier.modele.Medium;
 import fr.insalyon.dasi.metier.modele.ProfilAstral;
-import fr.insalyon.dasi.metier.modele.Spirite;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.OptimisticLockException;
 import util.AstroTest;
 
 /**
@@ -257,6 +255,14 @@ public class Service {
                 Message.envoyerConfirmationConsultation(resultat);
                 Message.envoyerNotificationConsultationEmploye(resultat);
             }
+            else{
+                JpaUtil.annulerTransaction();
+                Message.envoyerEchecDemandeConsultation(client, medium);
+            }
+        } catch (OptimisticLockException oex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Conflit sur l'employe, plusieurs accès en même temps !", oex);
+            JpaUtil.annulerTransaction();
+            resultat = null;
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service prendreRendezVous(Client client,Medium medium)", ex);
             JpaUtil.annulerTransaction();

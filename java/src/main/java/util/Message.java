@@ -77,6 +77,17 @@ public class Message {
         Message.envoyerNotification(client.getPrenom() + " " + client.getNom(), client.getTelephone(), message.toString());
     }
     
+    public static void envoyerEchecDemandeConsultation(Client client, Medium medium){
+        StringWriter message = new StringWriter();
+        PrintWriter notificationWriter = new PrintWriter(message);
+        
+        notificationWriter.println("Bonjour " + client.getPrenom() + ".");
+        notificationWriter.println("Malheureusement, " + medium.getDenomination() + " n'est pas disponible actuellement.");
+        notificationWriter.println("N'hésitez pas à reprendre rendez-vous à un autre moment.");
+               
+        Message.envoyerNotification(client.getPrenom() + " " + client.getNom(), client.getTelephone(), message.toString());
+    }
+    
     public static void envoyerNotificationConsultationEmploye(Consultation consultation){
         Client client = consultation.getClient();
         Medium medium = consultation.getMedium();
