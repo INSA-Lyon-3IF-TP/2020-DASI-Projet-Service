@@ -8,7 +8,6 @@ import fr.insalyon.dasi.metier.modele.Consultation;
 import fr.insalyon.dasi.metier.modele.Employe;
 import fr.insalyon.dasi.metier.modele.Genre;
 import fr.insalyon.dasi.metier.modele.Medium;
-import fr.insalyon.dasi.metier.modele.ProfilAstral;
 import fr.insalyon.dasi.metier.modele.Spirite;
 import fr.insalyon.dasi.metier.service.Service;
 import java.io.IOException;
@@ -52,7 +51,7 @@ public class Main {
         
             //Tests mediums
         
-        //service.initialiserMediums(Boolean.TRUE);
+        service.initialiserMediums(Boolean.TRUE);
         //listerMediums();
         
             //Tests consultation
@@ -192,9 +191,9 @@ public class Main {
         List<Client> listeClients = service.listerClients();
         System.out.println("*** Liste des Clients");
         if (listeClients != null) {
-            for (Client client : listeClients) {
+            listeClients.forEach((client) -> {
                 afficherClient(client);
-            }
+            });
         }
         else {
             System.out.println("=> ERREUR...");
