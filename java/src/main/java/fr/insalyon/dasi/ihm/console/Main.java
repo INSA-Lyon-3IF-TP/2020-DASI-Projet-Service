@@ -91,10 +91,7 @@ public class Main {
         
         System.out.println();
         System.out.println("**** initialiserClients() ****");
-        System.out.println();
-        
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("DASI-PU");
-        EntityManager em = emf.createEntityManager();
+        System.out.println();      
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -113,10 +110,7 @@ public class Main {
             // Erreur
         }
         
-        ProfilAstral profilAda = new ProfilAstral("Verseau", "Tigre", "Bleu", "Cochon");
         Client ada = new Client("Lovelace", "Ada", "Mme", date_Ada, "0606060606", "2, Rue des ananas", "ada.lovelace@insa-lyon.fr", "Ada1012");
-        ada.setProfilAstral(profilAda);
-        
         Client blaise = new Client("Pascal", "Blaise","M.", date_Blaise, "0607070707", "3, Rue des cocotiers",  "blaise.pascal@insa-lyon.fr", "Blaise1906");
         Client fred = new Client("Fotiadu", "Frédéric","M.", date_Fred, "0608080808", "5, Boulevard des tulipes",  "frederic.fotiadu@insa-lyon.fr", "INSA-Forever");
         
@@ -127,24 +121,11 @@ public class Main {
         afficherClient(fred);
         System.out.println();
 
-        try {
-            em.getTransaction().begin();
-            em.persist(ada);
-            em.persist(blaise);
-            em.persist(fred);
-            em.getTransaction().commit();
-        } catch (Exception ex) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service", ex);
-            try {
-                em.getTransaction().rollback();
-            }
-            catch (IllegalStateException ex2) {
-                // Ignorer cette exception...
-            }
-        } finally {
-            em.close();
-        }
-
+        Service service = new Service();
+        service.inscrireClient(ada);
+        service.inscrireClient(blaise);
+        service.inscrireClient(fred);
+        
         System.out.println();
         System.out.println("** Clients après persistance: ");
         afficherClient(ada);
