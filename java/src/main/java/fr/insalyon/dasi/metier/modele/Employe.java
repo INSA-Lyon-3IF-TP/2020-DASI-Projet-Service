@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 /**
  *
@@ -30,6 +31,8 @@ public class Employe implements Serializable {
     private Boolean estOccupe = false;
     @OneToMany(mappedBy = "employe")
     private List<Consultation> consultations;
+    @Version
+    private Long version;
     
     protected Employe() {
     }
