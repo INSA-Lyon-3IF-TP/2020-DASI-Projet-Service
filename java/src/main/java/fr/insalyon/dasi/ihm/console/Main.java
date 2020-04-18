@@ -45,31 +45,33 @@ public class Main {
         
             //Tests employe
         
-        service.initialiserEmployes(Boolean.TRUE);
-        testerAuthentificationUtilisateurs();
+        service.initialiserEmployes(Boolean.TRUE); //TRUE => Affichage debug
+        //testerAuthentificationUtilisateurs();
         //listerEmployes();
         
             //Tests mediums
         
-        service.initialiserMediums(Boolean.TRUE);
+        service.initialiserMediums(Boolean.TRUE); //TRUE => Affichage debug
         //listerMediums();
         
             //Tests consultation
         
+        testerPrendreRendezVous();
+        testerDebuterConsultation();
+        testerTerminerConsultation();
+        
+        //testerDebuterConsultation();
+        //testerTerminerConsultation();  
         //testerPrendreRendezVous();
         //testerDebuterConsultation();
         //testerTerminerConsultation();  
-        //testerDebuterConsultation();
-        //testerTerminerConsultation();  
-        //testerPrendreRendezVous();
-        //testerDebuterConsultation();
-        //testerTerminerConsultation();  
-        //testerClientApresConsultation();
+        
+        testerClientApresConsultation();
        
             //Tests AstroNetApi
 
         //testerAstroNetApi();
-        //testerPredictions();
+        testerPredictions();
         
         //testerStats();
         

@@ -44,7 +44,7 @@ public class Service {
         System.out.println("**** initialiserEmployes() ****");
         System.out.println();
         
-        List<Employe> employes = new ArrayList();
+        List<Employe> employes = new ArrayList<>();
         Employe emp1 = new Employe("SING", "Ainhoa", Genre.Feminin, "0705224200", "4 Rue Phelypeaux, Villeurbanne", "asing8183@free.fr", "employe1");
         Employe emp2 = new Employe("ABDIULLINA", "David Alexander", Genre.Masculin, "0590232772", "8 Rue Wilhelmine, Villeurbanne", "david-alexander.abdiullina@laposte.net", "employe2");
         Employe emp3 = new Employe("WOAGNER", "Moez", Genre.Masculin, "0832205629", "6 Rue Camille Koechlin, Villeurbanne", "moez.woagner@laposte.net", "employe3");
@@ -107,7 +107,7 @@ public class Service {
         System.out.println("**** initialiserMediums() ****");
         System.out.println();
         
-        List<Medium> mediums = new ArrayList();
+        List<Medium> mediums = new ArrayList<>();
         Medium med1 = new Cartomancien("Mme Irma",Genre.Feminin,"Comprenez votre entourage grâce à mes cartes ! Résultats rapides.");
         Medium med2 = new Spirite("Gwenaëlle",Genre.Feminin,"Spécialiste des grandes conversations au-delà de TOUTES les frontières.", "Boule de crital");
         Medium med3 = new Astrologue("Serena",Genre.Feminin,"Basée à Champigny-sur-Marne, Serena vous révèlera votre avenir pour éclairer votre passé.","École Normale Supérieure d’Astrologie (ENS-Astro)",2006);
@@ -121,8 +121,8 @@ public class Service {
         Medium med11 = new Spirite("Fred Lebuisson",Genre.Feminin,"Je modéliserai votre avenir à la perfection !", "Beautiful english accent");
         Medium med12 = new Astrologue("Nolwann Leruy",Genre.Feminin,"J'entends beaucoup de choses, même des animaux","BZH", 2002);
         Medium med13 = new Cartomancien("Patrock Bréul",Genre.Masculin,"Je lis dans les cartes de poker comme dans le jeu de tarot.");
-        Medium med14 = new Spirite("Jean-Ma Le Stylo",Genre.Masculin,"Pour un futur plus clair, je renierai votre passé", "Des cendres");
-        Medium med15 = new Astrologue("Mama Mitha",Genre.Feminin,"Avec moi, vos problèmes ne seront plus que de TOUS PETITS souvenirs !","École des Anges Gardiens", 2005);
+        Medium med14 = new Spirite("Jean-Ma Le Stylo",Genre.Masculin,"Pour un futur plus clair, je renierai votre passé", "Des cendres de l'être perdu");
+        Medium med15 = new Astrologue("Mama Mytha",Genre.Feminin,"Avec moi, vos problèmes ne seront plus que de TOUS PETITS souvenirs !","École des Anges Gardiens", 2005);
         Medium med16 = new Cartomancien("Roneud",Genre.Masculin,"Spécialiste de tous les maux, vous aidera à rester toujours debout.");
         Medium med17 = new Spirite("Éric Guérhône",Genre.Masculin,"Je vous propose d'avoir une image limpide de votre futur.", "Tutos vidéos");
         Medium med18 = new Astrologue("Marie Cumin",Genre.Feminin,"Marie pourra analyser vos ondes pour vous aider à devenir radieuse !","École supérieure de physique et de chimie industrielles de la ville de Paris (ESCPI)", 2005);
@@ -178,7 +178,7 @@ public class Service {
     // Connexion commune
     
     public Map<String,Long> authentifierUtilisateur(String mail, String motDePasse){
-        Map<String, Long> resultat = new HashMap();
+        Map<String, Long> resultat = new HashMap<>();
         resultat.put("Employe", null);
         resultat.put("Client", null);
         JpaUtil.creerContextePersistance();
@@ -495,8 +495,10 @@ public class Service {
             predictions = astroApi.getPredictions(client.getProfilAstral().getCouleur(), client.getProfilAstral().getAnimal(), niveauAmour, niveauSante, niveauTravail);
         } catch(IOException ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service getPredictions(niveauAmour, niveauSante, niveauTravail, client)", ex);
+            predictions = null;
         } finally {
-            return predictions;
+            
         }
+        return predictions;
     }
 }

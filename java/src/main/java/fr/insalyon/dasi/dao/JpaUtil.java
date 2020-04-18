@@ -99,8 +99,8 @@ public class JpaUtil {
     }
 
     /**
-     * Démarre une transaction sur l'instance courante de Entity Manager.
-     * <br><strong>À utiliser uniquement au niveau Service.</strong>
+     * Démarre une transaction sur l'instance courante de Entity Manager.<br><strong>À utiliser uniquement au niveau Service.</strong>
+     * @throws java.lang.Exception
      */
     public static void ouvrirTransaction() throws Exception {
         log("Ouverture de la transaction (begin)");
@@ -114,10 +114,10 @@ public class JpaUtil {
     }
 
     /**
-     * Valide la transaction courante sur l'instance courante de Entity Manager.
-     * <br><strong>À utiliser uniquement au niveau Service.</strong>
+     * Valide la transaction courante sur l'instance courante de Entity Manager.<br><strong>À utiliser uniquement au niveau Service.</strong>
      *
      * @exception RollbackException lorsque le <em>commit</em> n'a pas réussi.
+     * @throws java.lang.Exception
      */
     public static void validerTransaction() throws RollbackException, Exception {
         log("Validation de la transaction (commit)");

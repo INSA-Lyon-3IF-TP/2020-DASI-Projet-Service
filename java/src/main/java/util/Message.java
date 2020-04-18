@@ -3,7 +3,6 @@ package util;
 import fr.insalyon.dasi.metier.modele.Client;
 import fr.insalyon.dasi.metier.modele.Consultation;
 import fr.insalyon.dasi.metier.modele.Employe;
-import fr.insalyon.dasi.metier.modele.Genre;
 import fr.insalyon.dasi.metier.modele.Medium;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -92,7 +91,6 @@ public class Message {
         Client client = consultation.getClient();
         Medium medium = consultation.getMedium();
         Employe employe = consultation.getEmploye();
-        String dateConsultation = HORODATE_FORMAT.format(consultation.getHeureDemande());
         
         StringWriter message = new StringWriter();
         PrintWriter notificationWriter = new PrintWriter(message);

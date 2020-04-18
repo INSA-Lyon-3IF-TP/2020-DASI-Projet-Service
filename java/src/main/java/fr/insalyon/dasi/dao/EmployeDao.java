@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
-import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 
 /**
@@ -51,7 +50,8 @@ public class EmployeDao {
     
     public Map<Employe,Long> nombreClientsParEmploye() {
         EntityManager em = JpaUtil.obtenirContextePersistance();
-        Map<Employe, Long> result = new HashMap();
+        Map<Employe, Long> result = new HashMap<>();
+        @SuppressWarnings("unchecked")
         List<Object[]> resultList = em.createQuery("SELECT c.employe, count(distinct c.client) as nb FROM Consultation c GROUP BY c.employe").getResultList();
 
         // Place results in map
@@ -65,10 +65,9 @@ public class EmployeDao {
     public List<Employe> chercherParGenreEtDisponible(Genre mediumGenre) {
 
         EntityManager em = JpaUtil.obtenirContextePersistance();
-        List<Employe> employes = null;
         TypedQuery<Employe> query = em.createQuery("SELECT e FROM Employe e WHERE e.genre = :genre and e.estOccupe = FALSE", Employe.class);
         query.setParameter("genre", mediumGenre); // correspond au paramètre ":genre" dans la requête
-        employes = query.getResultList();
+        List<Employe> employes = query.getResultList();
         if (!employes.isEmpty()) {
             // Ordre croissant
             Collections.sort(employes, (Employe employe1, Employe employe2) -> employe1.getConsultations().size() > employe2.getConsultations().size() ? 1 : (employe1.getConsultations().size() < employe2.getConsultations().size()) ? -1 : 0);
