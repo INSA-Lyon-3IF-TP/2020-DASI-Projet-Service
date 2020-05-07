@@ -176,7 +176,7 @@ public class Service {
     }
     
     // Connexion commune
-    
+    /*
     public Map<String,Long> authentifierUtilisateur(String mail, String motDePasse){
         Map<String, Long> resultat = new HashMap<>();
         resultat.put("Employe", null);
@@ -213,6 +213,49 @@ public class Service {
             JpaUtil.fermerContextePersistance();
         }
         
+        return resultat;
+    }
+    */
+    
+    public Client authentifierClient(String mail, String motDePasse){
+        Client resultat = null;
+        JpaUtil.creerContextePersistance();
+        try {
+            // Recherche du client
+            Client client = clientDao.chercherParMail(mail);
+            if (client != null) {
+                // Vérification du mot de passe
+                if (client.getMotDePasse().equals(motDePasse)) {  
+                    resultat = client;
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service authentifierClient(mail,motDePasse)", ex);
+            resultat = null;
+        } finally {
+            JpaUtil.fermerContextePersistance();
+        }
+        return resultat;
+    }
+    
+    public Employe authentifierEmploye(String mail, String motDePasse){
+        Employe resultat = null;
+        JpaUtil.creerContextePersistance();
+        try {
+            // Recherche du client
+            Employe employe = employeDao.chercherParMail(mail);
+            if (employe != null) {
+                // Vérification du mot de passe
+                if (employe.getMotDePasse().equals(motDePasse)) {  
+                    resultat = employe;
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service authentifierClient(mail,motDePasse)", ex);
+            resultat = null;
+        } finally {
+            JpaUtil.fermerContextePersistance();
+        }
         return resultat;
     }
     
